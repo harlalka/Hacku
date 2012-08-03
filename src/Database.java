@@ -11,7 +11,7 @@ import java.util.Date;
 
 
 public class Database {
-        String id;
+       
         Connection connect = null;
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
@@ -22,19 +22,34 @@ public class Database {
                 query="SELECT login_time,logout_time FROM database_hacku.login_info WHERE login_info.id="+id+"ORDER BY ASC;";
         }*/
         
-        Database(String a){
-                this.id=a;
-                query="SELECT login_time,logout_time FROM login_info WHERE login_info.id=? AND logout_time>=? ORDER BY logout_time ASC;";
+        Database(){
+             try{Class.forName("com.mysql.jdbc.Driver");
+ 		connect = DriverManager.getConnection("jdbc:mysql://localhost/database_hacku?"+ "user=roruser&password=rorpw");
+            }catch(Exception e){
+                System.out.println("cannot connect");
+            }
         }
         
-        
-        public void readDataBase(){
+        public String getId(String tempname){
+            try{query = "Select id from user where name=?";
+            preparedStatement = connect.prepareStatement(query);
+            preparedStatement.setString(1,tempname);
+            ResultSet re = preparedStatement.executeQuery();
+            re.next();
+            //System.out.println(re.getString("id"));
+            return re.getString("id");
+            }catch(Exception e){
+                System.out.println("oops!");
+            }
+            return null;
+        }
+        public ResultSet readDataBase(String id){
         	try{
-        		Class.forName("com.mysql.jdbc.Driver"); 
-        		connect = DriverManager.getConnection("jdbc:mysql://localhost/database_hacku?"+ "user=roruser&password=rorpw");
-        		preparedStatement = connect.prepareStatement(query);
+        		
+        		query="SELECT login_time,logout_time FROM login_info WHERE login_info.id=? AND logout_time>=? ORDER BY logout_time ASC;";
+                        preparedStatement = connect.prepareStatement(query);
 
-        		preparedStatement.setString(1, this.id);
+        		preparedStatement.setString(1, id);
         		java.util.Calendar calin = Calendar.getInstance();
         		calin.setTime(new Date());
         		calin.add(Calendar.DAY_OF_YEAR, -29);
@@ -45,18 +60,14 @@ public class Database {
         		preparedStatement.setString(2,s);
         		//System.out.println(s);
         		resultSet = preparedStatement.executeQuery();
-                        
+                        return resultSet;
         	}catch (Exception e) {
         		System.out.println("error occured");
         		e.printStackTrace();
-        	} finally {
-        		//close();
         	}
+                return null;
+        }
         
-        }
-        public ResultSet getResultSet(){
-        	return resultSet;
-        }
         
    
         public void close() {

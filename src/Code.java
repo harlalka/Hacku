@@ -24,23 +24,25 @@ class Code {
         private ResultSet rs;
         private int current;
         String id;
+        String name;
         
-        
-        Code(String id){
-        	this.id=id;
+        Code(String tempname){
+                name = tempname;
                 //initialise 2 2-d arrays
+                    Database db = new Database();
+                    id=db.getId(tempname);
         		java.util.Calendar cal = Calendar.getInstance();
         		cal.setTime(new Date());
         		current = cal.get(java.util.Calendar.DAY_OF_YEAR);
         		//System.out.println(current);
-        		Database db = new Database(id);
-        		db.readDataBase();
-        		rs=db.getResultSet();
+        		
+        		rs=db.readDataBase(id);
+        		//System.out.println("aashay");
         		init_arrays();
                 init();
                 init_prob();
                 //db.close();
-                //print_input();
+                print_input();
         }
         public void init_arrays(){
         	String[] inString = new String[num_days];
@@ -136,16 +138,16 @@ class Code {
         private void print_input(){
         	for(int i=0;i<num_days;i++){
         		for (int j=0;j<num_ticks;j++){
-        			//System.out.print(input[i][j]);
+        			System.out.print(input[i][j]);
         		}
-        		//System.out.println();
+        		System.out.println();
         	}
         }
         
         
         public String[] get_data()
     	{
-        	String name = this.id;
+        	String name = this.name;
         	ResultSet rs=this.rs;
         	double[] float_arr = this.prob;
     		String[] data = new String[3];
@@ -203,17 +205,17 @@ class Code {
     		{
                     if((times[j]%60)<10){
                         if((times[j+1]%60)<10){
-                            data[1] += (int)(times[j]/60) +":0"+ times[j]%60 +" to " + (int)(times[j+1]/60) +":0"+ times[j+1]%60  + " ";
+                            data[1] += (int)(times[j]/60) +":0"+ times[j]%60 +" to " + (int)(times[j+1]/60) +":0"+ times[j+1]%60  + " , ";
                         }
                         else
-                            data[1] += (int)(times[j]/60) +":0"+ times[j]%60 +" to " + (int)(times[j+1]/60) +":"+ times[j+1]%60  + " ";
+                            data[1] += (int)(times[j]/60) +":0"+ times[j]%60 +" to " + (int)(times[j+1]/60) +":"+ times[j+1]%60  + " , ";
                     }
                     else{
                         if((times[j+1]%60)<10){
-                            data[1] += (int)(times[j]/60) +":"+ times[j]%60 +" to " + (int)(times[j+1]/60) +":0"+ times[j+1]%60  + " ";
+                            data[1] += (int)(times[j]/60) +":"+ times[j]%60 +" to " + (int)(times[j+1]/60) +":0"+ times[j+1]%60  + " , ";
                         }
                         else
-                            data[1] += (int)(times[j]/60) +":"+ times[j]%60 +" to " + (int)(times[j+1]/60) +":"+ times[j+1]%60  + " ";
+                            data[1] += (int)(times[j]/60) +":"+ times[j]%60 +" to " + (int)(times[j+1]/60) +":"+ times[j+1]%60  + " , ";
                     }
     		}
                 //System.out.println(data[1]);
