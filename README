@@ -1,0 +1,4 @@
+In order to run this, u have to make a database named "database_hacku" and two tables in that "login_info" and "user".
+in the login_info u should have 3 columns id(int)(primary key), login_time(timestamp) and logout_time(timestamp).
+in user, you should have 2 columns id(int) (foreign key) , name (string).
+Also in Database.java file, line 27, give appropriate username and password.
